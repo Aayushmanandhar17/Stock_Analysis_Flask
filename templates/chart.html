@@ -9,10 +9,28 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="https://code.highcharts.com/css/stocktools/gui.css">
+  <link rel="stylesheet" type="text/css" href="https://code.highcharts.com/css/annotations/popup.css">
+
+  <script src="https://code.highcharts.com/stock/highstock.js"></script>
+  <script src="https://code.highcharts.com/stock/modules/data.js"></script>
+
+  <script src="https://code.highcharts.com/stock/indicators/indicators-all.js"></script>
+
+  <script src="https://code.highcharts.com/stock/modules/drag-panes.js"></script>
+  <script src="https://code.highcharts.com/stock/modules/annotations-advanced.js"></script>
+  <script src="https://code.highcharts.com/stock/modules/price-indicator.js"></script>
+  <script src="https://code.highcharts.com/stock/modules/full-screen.js"></script>
+
+  <script src="https://code.highcharts.com/stock/modules/stock-tools.js"></script>
   </head>
   <body>
     <!-- Site content goes here !-->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-info" style="padding-bottom:50px; margin-bottom:50px">
   <a class="navbar-brand" href="#">STOCK PREDICTION</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -39,54 +57,199 @@
     </ul>
     <form action= "/form" class="form-inline my-2 my-lg-0" method="POST">
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="symbol">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
     </form>
   </div>
 </nav>
 
 
-<div class="container">
+<div class="container" style="margin-bottom:50px">
   <div class="row">
 
     <div class="col-sm">
-      <h1>Company Info</h1>
+      <div class="alert alert-primary" role="alert">
+        <center>
       <h3>{{data}}</h3>
-      <h5>{{value}}</h5>
+        </center>
+      </div>
+          <p>{{Description}}</p>
+
     </div>
-    <div class="col-sm">
-        <div class="ct-chart ct-perfect-fourth"></div>
+    <div class="mh-100" >
+        <div id="container" class="chart"></div>
     </div>
   </div>
 </div>
 
+<div class="container" >
+  <div class="row">
+    <div class="col-sm">
+      <div class="alert alert-primary" role="alert">
+      <h5>{{sector}}</h5>
+    </div>
+    <div class="alert alert-primary" role="alert">
+    <h5>EXCHAGE: {{exchange}}</h5>
+  </div>
+    </div>
+    <div class="col-sm">
+      <div class="alert alert-secondary" role="alert">
+      <h5> EPS:  {{eps}}</h5>
+      </div>
+      <div class="alert alert-secondary" role="alert">
+      <h5> PERATIO:  {{peratio}}</h5>
+      </div>
+    </div>
+    <div class="col-sm">
+      <div class="alert alert-success" role="alert">
+    <h5>  DIVIDEND:  {{dividend}}</h5>
+      </div>
+      <div class="alert alert-success" role="alert">
+    <h5>  CAPITAL:  {{capital}}</h5>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="" style="margin:2% 10%;">
+  <div class="alert alert-info" role="alert">
+      <h2> <center>
+        ALgorithmic Trading Indicators
+      </center> </h2>
+  </div>
+  <div id="container1" class="chart"></div>
+</div>
+
+
+
+
+
+
+
+
 
     <script>
+        var chartdata = []
+        var average=[]
+        var average100=[]
+        var volume = []
 
-    var getData=$.get('/data');
+        function processData(data)
+        {
+            var data = data.res;
+            for (var i=0; i < data.length; i++)
+            {
+                chartdata.push([
+                    data[i][0], // the date
+                    data[i][1], // open
+                    data[i][2], // high
+                    data[i][3], // low
+                    data[i][4] // close
+                ]);
+                average.push([
+                    data[i][0], // the date
+
+                    data[i][7] // MA30
+                ]);
+                average100.push([
+                    data[i][0], // the date
+
+                    data[i][8] // MA100
+                ]);
+                volume.push([
+                    data[i][0], // the date
+                    data[i][5] // the volume
+                ]);
+            }
+        }
 
 
-      getData.done(function(results){
-          var data = {
+        function plotCharts(){
+            Highcharts.stockChart('container', {
 
-            series: [
-              results.results
+                yAxis: [{
+                    labels: {
+                        align: 'left'
+                    },
+                    height: '80%'
+                }, {
+                    labels: {
+                        align: 'left'
+                    },
+                    top: '80%',
+                    height: '20%',
+                    offset: 0
+                }],
+                series: [{
+                    type: 'line',
+                    id: '{{data}}-ohlc',
+                    name: '{{data}} Stock Price',
+                    data: chartdata
+                }, {
+                    type: 'column',
+                    id: '{{data}}-volume',
+                    name: '{{data}} Volume',
+                    data: volume,
+                    yAxis: 1
+                }]
+            });
 
-            ]
 
-              };
-          var options={
-                  width:500,
-                  height:400
-                }
-          var shade={
-                  low: 0,
-                  showArea: true
-                }
+        }
+
+        function plotCharts1(){
+            Highcharts.stockChart('container1', {
+
+                yAxis: [{
+                    labels: {
+                        align: 'left'
+                    },
+                    height: '80%'
+                }, {
+                    labels: {
+                        align: 'left'
+                    },
+                    top: '80%',
+                    height: '20%',
+                    offset: 0
+                }],
+                series: [{
+                    type: 'line',
+                    id: '{{data}}-ohlc',
+                    name: '{{data}} Stock Price',
+                    data: chartdata
+                },{
+                    type: 'line',
+                    marker: {
+                        symbol: 'square'
+                      },
+                    id: '{{data}}-ohlc',
+                    name: '{{data}} 100_day_average',
+                    data: average100
+                },{
+                    type: 'line',
+                    name: '{{data}} 30_day_average',
+                    data: average
+                }, {
+                    type: 'column',
+                    id: '{{data}}-volume',
+                    name: '{{data}} Volume',
+                    data: volume,
+                    yAxis: 1
+                }]
+            });
 
 
-          new Chartist.Line('.ct-chart', data,options,shade);
+        }
 
-      });
+        $( document ).ready(function()
+        {
+            $.getJSON('/pipe', function(data){
+                processData(data);
+
+                plotCharts();
+                plotCharts1();
+            });
+        });
 
     </script>
   </body>
