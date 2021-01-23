@@ -6,12 +6,10 @@ import datetime
 import pandas_datareader.data as web
 import requests
 from bs4 import BeautifulSoup
-
 from textblob import TextBlob
 #library for the news api
 from newsapi import NewsApiClient
 import requests
-
 import os
 import tensorflow as tf
 import keras
@@ -19,7 +17,6 @@ from keras import backend as k
 from keras import Sequential
 from keras.models import load_model
 from keras.models import model_from_json
-
 from sklearn.preprocessing import MinMaxScaler
 
 
@@ -32,6 +29,7 @@ class visual_class:
     single_day=0
     scale=0
     def __init__(self):
+
         self.alpha_vintage="4X4XP17E6TN4ULP5"
         self.newsapi = NewsApiClient(api_key='e0f1e850adbd4b2385bc47eb8ff22685')
         self.stock=self.dual_moving_average(self.company_name)
@@ -39,12 +37,14 @@ class visual_class:
         print("Constructor created")
 
     def news(self):
+        #set start date and end date
+        start,end=self.get_start_end_date(15)
         # Accessing all the article with the company name
-        all_articles = self.newsapi.get_everything(q="TESLA",
+        all_articles = self.newsapi.get_everything(q="Bank",
                                           sources='Bloomberg,the-verge,engadget,financial-post,wired,business-insider',
                                           domains='www.bloomberg.com,techcrunch.com,www.engadget.com,business.financialpost.com,www.wired.com,www.businessinsider.com',
-                                          from_param='2020-10-30',
-                                          to='2020-11-08',
+                                          from_param=start,
+                                          to=end,
                                           language='en',
                                           sort_by='relevancy',
                                           page=2)
@@ -70,13 +70,17 @@ class visual_class:
 
 
 
+    def get_start_end_date(self,range):
+        now = datetime.datetime.now()
+        end_time=now.strftime("%Y-%m-%d")
+        start_time=pd.date_range(end = end_time, periods = range).to_pydatetime().tolist()
+        start_time=start_time[0].strftime("%Y-%m-%d")
+        return start_time,end_time
 
 
-    def stock_data(self,name):
-        start=datetime.datetime(2020,8,29)
-        end=datetime.datetime(2020,9,29)
-
-        STOCK=web.DataReader(self.company_name,'yahoo',start,end)
+    def stock_data(self,name=company_name):
+        start,end=self.get_start_end_date(30)
+        STOCK=web.DataReader(name,'yahoo',start,end)
         result = STOCK['Close']
         return result
 
@@ -103,14 +107,13 @@ class visual_class:
         return Name, description,sector,dividend,EPS,capital,exchange,peratio
 
     def dual_moving_average(self,name):
+        now = datetime.datetime.now()
+        end_time=now.strftime("%Y-%m-%d")
         start=datetime.datetime(2013,10,18)
-        end=datetime.datetime(2020,10,31)
-        STOCK=web.DataReader(name,'yahoo',start,end)
+        STOCK=web.DataReader(name,'yahoo',start,end_time)
         STOCK['MA30']=STOCK['Close'].rolling(30).mean()
         STOCK['MA100']=STOCK['Close'].rolling(100).mean()
         STOCK.reset_index(inplace=True)
-
-
         return STOCK
 # Loading the trained model
     def load_trained_model(self,json_file,hfive_file):
@@ -157,7 +160,7 @@ class visual_class:
         scaler=(1/s[0])
 
         final_prediction=final_prediction*scaler
-        final_prediction=(final_prediction+20.36)
+        final_prediction=(final_prediction+22.36)
         final_prediction=final_prediction.flatten()
 
         predict = np.vstack((final_prediction, sixty_day_price)).T
@@ -185,8 +188,7 @@ class visual_class:
         s=sc.scale_
         scaler=(1/self.scale[0])
 
-        print("Print Scaler",scaler)
-        Single_final_prediction=Single_final_prediction
+        Single_final_prediction=(Single_final_prediction*scaler)+22.36
 
         self.single_day= Single_final_prediction
 

@@ -1,26 +1,10 @@
 import flask
-import os
+import visual
 import io
-import base64
 from flask import Flask, render_template, jsonify,json
 from jinja2 import Template
 from visual import *
-import pandas as pd
-import numpy as np
-import datetime
 import matplotlib.pyplot as plt
-import seaborn as sns
-
-import keras
-from keras import backend as k
-from keras import Sequential
-from keras.models import load_model
-from keras.models import model_from_json
-
-from sklearn.preprocessing import MinMaxScaler
-
-import pandas_datareader.data as web
-import pandas_datareader
 from flask import Flask, render_template, request, url_for
 app=flask.Flask(__name__)
 
@@ -42,9 +26,10 @@ def index():
     test.load_trained_model('BAC_pred.json','BAC_predictor.h5')
 
     print("The prediction for next day is: ",test.single_day)
+    single_day_pred=test.single_day
     news_data,polarity,subjectivity=test.news()
     data.close_price=json_data
-    return render_template('chart.html',data=Name,Description=company_description,sector=sector,dividend=dividend,eps=eps,exchange=exchange,peratio=peratio,capital=capital, news=news_data,polar=polarity,subject=subjectivity )
+    return render_template('chart.html',data=Name,Description=company_description,sector=sector,dividend=dividend,eps=eps,exchange=exchange,peratio=peratio,capital=capital, news=news_data,polar=polarity,subject=subjectivity, single_day=single_day_pred )
 
 ## Creatign a json object of the Data
 @app.route('/data')
