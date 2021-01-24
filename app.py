@@ -18,6 +18,7 @@ news_info=news.news_data()
 def search():
     company=request.form.get("symbol")
     test.company_name=company
+    ml.company_name=company
     return flask.redirect("/")
 
 
@@ -26,9 +27,10 @@ def index():
     stock_result=test.stock_data(test.company_name)
     json_data=test.convert_json(stock_result)
     Name, company_description,sector,dividend,eps,capital,exchange,peratio=test.company_description(test.company_name)
-    ml.load_trained_model('BAC_pred.json','BAC_predictor.h5')
+    ml.load_trained_model()
 
-    print("The prediction for next day is: ",ml.single_day)
+    #print("The prediction for next day is: ",ml.single_day)
+    print("The bias is ", ml.bias)
     single_day_pred=ml.single_day
     news_data,polarity,subjectivity=news_info.news()
     data.close_price=json_data
