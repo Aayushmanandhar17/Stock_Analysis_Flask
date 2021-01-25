@@ -5,12 +5,12 @@ import news
 import io
 from flask import Flask, render_template, jsonify,json
 from jinja2 import Template
-from visual import *
+#from visual import *
 import matplotlib.pyplot as plt
 from flask import Flask, render_template, request, url_for
 app=flask.Flask(__name__)
 
-test=visual_class()
+test=visual.visual_class()
 ml=rnn.machine_learning()
 news_info=news.news_data()
 
