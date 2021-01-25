@@ -1,7 +1,7 @@
 # Stock Analysis Web-Application
 
 ## Description
-This is a web application developed using Flask Framework. It makes use of HTML, CSS, and JavaScript for the frontend. The charts in this project is created using ChartJS api.
+This is a web application developed using Flask Framework. It makes use of HTML, Bootstrap Template, and JavaScript for the frontend. The charts in this project is created using ChartJS api.
 
 ## Features
 1) It helps to display the charts, moving average, and Description of a particular company.
