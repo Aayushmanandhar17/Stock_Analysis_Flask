@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Portfolio Optimization</title>
+		<script>
+	 	var company_list=[];
+			function addParagraph(){
+				//create a new <p> element
+				var newPDiv = document.createElement("p");
+				var text = document.querySelectorAll("input")[0].value;
+				//create the content for the <p> element
+				var pContent = document.createTextNode(text);
+				company_list.push(pContent)
+				//add the content to the <p> element
+				newPDiv.appendChild(pContent);
+				//get the container <div>
+				var containerDiv = document.getElementById("container");
+				//add the <p> element to the <div>
+				containerDiv.appendChild(newPDiv);
+			}
+
+		</script>
+	</head>
+	<body>
+		<p onclick="addParagraph()">Enter the stock symbol you would like to buy</p>
+
+		<label ><b>Company Name:</b></label>
+		<input type="text" name="Company Name:" value="" size="100" />
+		<br />
+		<button onclick="addParagraph()"><b>ADD</b></button>
+
+		<div id="container"></div>
+	</body>
+</html>
