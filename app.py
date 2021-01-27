@@ -13,6 +13,8 @@ app=flask.Flask(__name__)
 test=visual.visual_class()
 ml=rnn.machine_learning()
 news_info=news.news_data()
+stock_opti=[]
+
 
 @app.route('/form',methods=["POST"])
 def search():
@@ -20,6 +22,23 @@ def search():
     test.company_name=company
     ml.company_name=company
     return flask.redirect("/")
+
+@app.route('/list_opt',methods=["POST"])
+def list_company():
+    company=request.form.get("symbol")
+    stock_opti.append(company)
+    return flask.redirect("/opt")
+
+
+@app.route('/opt')
+def opt():
+    return render_template('optimize.html',list=stock_opti, sample=news_info.sample)
+
+@app.route('/compute',methods=['GET', 'POST'])
+def compute():
+    news_info.sample="Hello there how are you"
+    return flask.redirect("/opt")
+
 
 
 @app.route('/')
@@ -45,7 +64,6 @@ def data():
 
 @app.route('/data_strategy')
 def data_strategy():
-
     json_data=test.convert_json(stock)
     return jsonify({'results':json_data})
 

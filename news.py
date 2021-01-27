@@ -8,6 +8,7 @@ import requests
 data=vc.visual_class()
 
 class news_data:
+    sample=[]
     def __init__(self):
         self.newsapi = NewsApiClient(api_key='e0f1e850adbd4b2385bc47eb8ff22685')
 
