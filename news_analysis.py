@@ -1,8 +1,9 @@
 import visual as vc
+import text_filter as tf
 import requests
 
 data=vc.visual_class()
-
+filter=tf.news_filter()
 class news_data:
     def __init__(self):
         self.finnhub_api='c0c76rn48v6u6kubfclg'
@@ -24,5 +25,7 @@ class news_data:
 
 data=news_data()
 news=data.news()
-headline=data.news_attribute('related')
-print(headline)
+headline=data.news_attribute('headline')
+#print(headline)
+merged_data=filter.clean_data(headline)
+print(merged_data)
