@@ -28,6 +28,10 @@ class visual_class:
         start_time=start_time[0].strftime("%Y-%m-%d")
         return start_time,end_time
 
+    def today_yahoo_data(self,name=company_name):
+        start,end=self.get_start_end_date(1)
+        today_price=web.DataReader(name,'yahoo',start,end)
+        return today_price
 
     def stock_data(self,name=company_name):
         start,end=self.get_start_end_date(30)
