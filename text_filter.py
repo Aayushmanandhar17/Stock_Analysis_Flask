@@ -5,10 +5,12 @@ from nltk.tokenize import word_tokenize
 from textblob import TextBlob
 import re
 import pandas as pd
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 class news_filter:
     def __init__(self):
         self.data=None
+        self.clean_text=None
     def combine_text_data(self,data):
         extracted_paragraph = ' '.join([str(elem) for elem in data])
         self.data=extracted_paragraph
@@ -25,5 +27,14 @@ class news_filter:
                 filtered_words.append(stemmer.stem(word))
 
         filtered_string = ' '.join([str(elem) for elem in filtered_words])
-
+        self.clean_text=filtered_string
         return filtered_string
+
+    def getSubjectivity(self):
+        return TextBlob(self.clean_text).sentiment.subjectivity
+    def getPolarity(self):
+        return TextBlob(self.clean_text).sentiment.polarity
+    def getSIA(self):
+        sia=SentimentIntensityAnalyzer()
+        sentiment=sia.polarity_scores(self.clean_text)
+        return sentiment
