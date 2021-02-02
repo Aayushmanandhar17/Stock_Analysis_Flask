@@ -11,7 +11,7 @@ class news_data:
         self.finnhub_api='c0c76rn48v6u6kubfclg'
         self.news_json=None
 
-    def news_json_api(self,symbol='TSLA'):
+    def news_json_api(self,symbol):
         start,end=yahoo_data.get_start_end_date(2)
         r = requests.get(f'https://finnhub.io/api/v1/company-news?symbol={symbol}&from={start}&to={end}&token={self.finnhub_api}')
         data=r.json()
@@ -26,7 +26,7 @@ class news_data:
         return result
 
 
-    def metrics(self,symbol='TSLA',attribute='headline'):
+    def metrics(self,symbol,attribute='headline'):
         news=self.news_json_api(symbol)
         headline=self.news_attribute(attribute)
         merged_data=filter.clean_data(headline)
@@ -52,8 +52,8 @@ class news_data:
 
 
 data=news_data()
-dataframe=data.metrics('FB','headline')
-print(dataframe)
-json=data.news_json_api()
-attribute=data.news_attribute('headline')
-print(attribute)
+#dataframe=data.metrics('FB','headline')
+#print(dataframe)
+#json=data.news_json_api('TSLA')
+#attribute=data.news_attribute('headline')
+#print(attribute)

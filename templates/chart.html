@@ -152,8 +152,9 @@
       </center> </h2>
   </div>
 
-  {% for newsdata in news %}
-            <li class="collection-item">{{ newsdata }}</li>
+  {% for i in range(length) %}
+            <li class="collection-item"><a href="{{link[i]}}">{{ news[i] }}</a></li>
+
             <br>
         {% endfor %}
 
@@ -174,13 +175,7 @@
 
 </div>
 
-
 </div>
-
-
-
-
-
 
 
 
@@ -355,8 +350,6 @@
 
 
         }
-
-
 
 
         $( document ).ready(function()

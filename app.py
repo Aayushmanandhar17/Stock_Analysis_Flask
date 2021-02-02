@@ -2,6 +2,7 @@ import flask
 import visual
 import rnn
 import news
+import news_analysis as na
 import io
 from flask import Flask, render_template, jsonify,json
 from jinja2 import Template
@@ -13,6 +14,7 @@ app=flask.Flask(__name__)
 test=visual.visual_class()
 ml=rnn.machine_learning()
 news_info=news.news_data()
+news_analysis=na.news_data()
 stock_opti=[]
 
 
@@ -47,13 +49,15 @@ def index():
     json_data=test.convert_json(stock_result)
     Name, company_description,sector,dividend,eps,capital,exchange,peratio=test.company_description(test.company_name)
     ml.load_trained_model()
-
-    #print("The prediction for next day is: ",ml.single_day)
-    print("The bias is ", ml.bias)
     single_day_pred=ml.single_day
-    news_data,polarity,subjectivity=news_info.news()
+    df=news_analysis.metrics(test.company_name,'headline')
+    json=news_analysis.news_json_api(test.company_name)
+    headline=news_analysis.news_attribute('headline')
+    link=news_analysis.news_attribute('url')
+    #news_data,polarity,subjectivity=news_info.news
+
     data.close_price=json_data
-    return render_template('chart.html',data=Name,Description=company_description,sector=sector,dividend=dividend,eps=eps,exchange=exchange,peratio=peratio,capital=capital, news=news_data,polar=polarity,subject=subjectivity, single_day=single_day_pred )
+    return render_template('chart.html',data=Name,Description=company_description,sector=sector,dividend=dividend,eps=eps,exchange=exchange,peratio=peratio,capital=capital, news=headline,polar=df['Polarity'][0],subject=df['Subjectivity'][0], single_day=single_day_pred,link=link,length=len(headline) )
 
 ## Creatign a json object of the Data
 @app.route('/data')
