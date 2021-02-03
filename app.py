@@ -13,7 +13,6 @@ app=flask.Flask(__name__)
 
 test=visual.visual_class()
 ml=rnn.machine_learning()
-news_info=news.news_data()
 news_analysis=na.news_data()
 stock_opti=[]
 
@@ -54,10 +53,9 @@ def index():
     json=news_analysis.news_json_api(test.company_name)
     headline=news_analysis.news_attribute('headline')
     link=news_analysis.news_attribute('url')
-    #news_data,polarity,subjectivity=news_info.news
-
+    image=news_analysis.news_attribute('image')
     data.close_price=json_data
-    return render_template('chart.html',data=Name,Description=company_description,sector=sector,dividend=dividend,eps=eps,exchange=exchange,peratio=peratio,capital=capital, news=headline,polar=df['Polarity'][0],subject=df['Subjectivity'][0], single_day=single_day_pred,link=link,length=len(headline) )
+    return render_template('chart.html',data=Name,Description=company_description,sector=sector,dividend=dividend,eps=eps,exchange=exchange,peratio=peratio,capital=capital, news=headline,polar=df['Polarity'][0],subject=df['Subjectivity'][0], single_day=single_day_pred,link=link,length=len(headline),image=image[0] )
 
 ## Creatign a json object of the Data
 @app.route('/data')
