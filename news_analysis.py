@@ -24,7 +24,10 @@ class news_data:
             head=self.news_json[i][f'{attribute}']
             result.append(head)
         return result
-
+    def market_trend(self,symbol):
+        r = requests.get(f'https://finnhub.io/api/v1/stock/recommendation?symbol={symbol}&token={self.finnhub_api}')
+        r=r.json()
+        return r[0]
 
     def metrics(self,symbol,attribute='headline'):
         news=self.news_json_api(symbol)
@@ -51,7 +54,9 @@ class news_data:
         return df
 
 
-data=news_data()
+
+#data=news_data()
+
 #dataframe=data.metrics('FB','headline')
 #print(dataframe)
 #json=data.news_json_api('TSLA')

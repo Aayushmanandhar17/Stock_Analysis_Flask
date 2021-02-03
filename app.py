@@ -50,12 +50,13 @@ def index():
     ml.load_trained_model()
     single_day_pred=ml.single_day
     df=news_analysis.metrics(test.company_name,'headline')
+    trend=news_analysis.market_trend(test.company_name)
     json=news_analysis.news_json_api(test.company_name)
     headline=news_analysis.news_attribute('headline')
     link=news_analysis.news_attribute('url')
     image=news_analysis.news_attribute('image')
     data.close_price=json_data
-    return render_template('chart.html',data=Name,Description=company_description,sector=sector,dividend=dividend,eps=eps,exchange=exchange,peratio=peratio,capital=capital, news=headline,polar=df['Polarity'][0],subject=df['Subjectivity'][0], single_day=single_day_pred,link=link,length=len(headline),image=image[0] )
+    return render_template('chart.html',data=Name,Description=company_description,sector=sector,dividend=dividend,eps=eps,exchange=exchange,peratio=peratio,capital=capital, news=headline,polar=df['Polarity'][0],subject=df['Subjectivity'][0], single_day=single_day_pred,link=link,length=len(headline),image=image[0],buy=trend['buy'],strong_buy=trend['strongBuy'],hold=trend['hold'],sell=trend['sell'],strong_sell=trend['strongSell'] )
 
 ## Creatign a json object of the Data
 @app.route('/data')

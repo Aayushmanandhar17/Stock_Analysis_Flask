@@ -22,8 +22,11 @@
   <script src="https://code.highcharts.com/stock/modules/annotations-advanced.js"></script>
   <script src="https://code.highcharts.com/stock/modules/price-indicator.js"></script>
   <script src="https://code.highcharts.com/stock/modules/full-screen.js"></script>
-
   <script src="https://code.highcharts.com/stock/modules/stock-tools.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
   <!<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles.css') }}">
   <style>
   div.ex1 {
@@ -189,17 +192,27 @@
 <div class="container" style="margin-top: 20px">
   <div class="row">
     <div class="col-md">
-      <div class="alert alert-success" role="alert">
-    <h3>  The polarity is {{polar}}</h3>
-      </div>
+      <figure class="highcharts-figure">
+        <div id="container3"></div>
+      </figure>
+
     </div>
+
     <div class="col-md">
-      <div class="alert alert-primary" role="alert">
-    <h3> The subjectivity is {{subject}} </h3>
+      <div class="col-sm">
+        <div class="alert alert-success" role="alert">
+      <h3>  The polarity is {{polar}}</h3>
+        </div>
+      </div>
+      <div class="col-sm">
+        <div class="alert alert-primary" role="alert">
+      <h3> The subjectivity is {{subject}} </h3>
+        </div>
       </div>
     </div>
 
   </div>
+
 
 </div>
 
@@ -391,6 +404,62 @@
                 plotCharts2();
             });
         });
+
+
+
+        Highcharts.chart('container3', {
+          chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: 0,
+            plotShadow: false
+          },
+          title: {
+            text: 'Analyst<br /> Recommendation <br />this<br />Month',
+            align: 'center',
+            verticalAlign: 'middle',
+            y: 60,
+            x:-20
+          },
+          tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+          },
+          accessibility: {
+            point: {
+              valueSuffix: '%'
+            }
+          },
+          plotOptions: {
+            pie: {
+              dataLabels: {
+                enabled: true,
+                distance: -50,
+                style: {
+                  fontWeight: 'bold',
+                  color: 'white'
+                }
+              },
+              startAngle: -90,
+              endAngle: 90,
+              center: ['50%', '75%'],
+              size: '110%'
+            }
+          },
+          series: [{
+            type: 'pie',
+            name: 'Market Trend',
+            innerSize: '50%',
+            data: [
+              ['Strong Buy', {{strong_buy}}],
+              ['Buy', {{buy}}],
+              ['Hold', {{hold}}],
+              ['Sell', {{sell}}],
+              ['Strong Sell', {{strong_sell}}],
+
+            ]
+          }]
+        });
+
+
 
     </script>
   </body>
