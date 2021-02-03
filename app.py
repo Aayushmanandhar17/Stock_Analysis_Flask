@@ -56,7 +56,7 @@ def index():
     link=news_analysis.news_attribute('url')
     image=news_analysis.news_attribute('image')
     data.close_price=json_data
-    return render_template('chart.html',data=Name,Description=company_description,sector=sector,dividend=dividend,eps=eps,exchange=exchange,peratio=peratio,capital=capital, news=headline,polar=df['Polarity'][0],subject=df['Subjectivity'][0], single_day=single_day_pred,link=link,length=len(headline),image=image[0],buy=trend['buy'],strong_buy=trend['strongBuy'],hold=trend['hold'],sell=trend['sell'],strong_sell=trend['strongSell'] )
+    return render_template('chart.html',data=Name,Description=company_description,sector=sector,dividend=dividend,eps=eps,exchange=exchange,peratio=peratio,capital=capital, news=headline,polar=df['Polarity'][0],subject=df['Subjectivity'][0], positive=df['Positive'][0],negative=df['Negative'][0],neutral=df['Neutral'][0],single_day=single_day_pred,link=link,length=len(headline),image=image[0],buy=trend['buy'],strong_buy=trend['strongBuy'],hold=trend['hold'],sell=trend['sell'],strong_sell=trend['strongSell'] )
 
 ## Creatign a json object of the Data
 @app.route('/data')
